@@ -1,0 +1,45 @@
+---
+title: "WDI Visualisations"
+author: "Jasper Moeller"
+date: "2024-11-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+```{r read in files}
+WDICountry <- read_csv('../Data/WDI_CSV_2024_10_24/WDICountry.csv')
+WDICountry_series <- read_csv('../Data/WDI_CSV_2024_10_24/WDICountry-series.csv')
+WDICSV <- read_csv('../Data/WDI_CSV_2024_10_24/WDICSV.csv')
+WDIFootnote <- read_csv('../Data/WDI_CSV_2024_10_24/WDIfootnote.csv')
+WDISeries <- read_csv('../Data/WDI_CSV_2024_10_24/WDISeries.csv')
+WDISeries_time <- read_csv('../Data/WDI_CSV_2024_10_24/WDIseries-time.csv')
+```
+
+```{r Get list of indicators worth investigating}
+WDI <- WDICSV %>%  
+  select(`Country Name`, `Country Code`, `Indicator Name`, `1973`, `1983`, `1993`, `2003`, `2013`, `2023`) %>% 
+  drop_na(`2023`)
+WDI %>% group_by(`Indicator Name`) %>% summarise(count = n()) %>% arrange(desc(count))
+```
+Of interest could be
+- GDP growth/Population growth
+```{r Visualising SG.VAW.REAS.ZS}
+# Filter out this indicator
+WDICSV_SG.VAW.REAS.ZS <- WDICSV %>% 
+  filter(`Indicator Code` == 'SG.VAW.REAS.ZS') %>% 
+  select(`Country Name`, `Country Code`, `1973`, `1983`, `1993`, `2003`, `2013`, `2023`) %>% 
+  drop_na(any_of(c(1973, 1983, 1993, 2003, 2013, 2023))) %>% 
+  arrange(desc(`2023`))
+
+head(WDICSV_SG.VAW.REAS.ZS)
+```
+
+
+
+
+
